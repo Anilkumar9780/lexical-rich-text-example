@@ -1,88 +1,22 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, forwardRef } from 'react';
+import React, { useState } from 'react';
 
 // lexical library components
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { ErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import {
-  $getRoot,
-  $getSelection,
-  $createrootNode,
-  $createTextNode,
-  $getRangeAt,
-  $createRange,
-  $isRangeSelection,
-  $createLinkNode,
-  $getNodeByKey,
-  $rootTextContent,
-  $insertNodeToNearestRoot
-} from "lexical";
-import {
-  INSERT_root_COMMAND,
-  COMMAND_PRIORITY_EDITOR,
-  CLEAR_EDITOR_COMMAND,
-  INSERT_LINK_COMMAND,
-  INSERT_PARAGRAPH_COMMAND
-} from "lexical";
-import { $generateNodesFromDOM } from '@lexical/html';
+import { LinkNode } from "@lexical/link";
+import { $getRoot } from "lexical";
 
 // components
 import ExampleTheme from "./themes/ExampleTheme";
-
-/**
- * get useLexicalComposeContest and  store one state
- * using useEffect
- * run editer registerCommand 
- * passing dep editer state
- */
-const MyCustomLineBreakNodePlugin = () => {
-  const [editor] = useLexicalComposerContext();
-  useEffect(() => {
-    editor.registerCommand(
-      INSERT_PARAGRAPH_COMMAND,
-      () => {
-        return true;
-      },
-      COMMAND_PRIORITY_EDITOR
-    );
-  }, [editor]);
-}
-
-const MyCustomAddCursorTaskOption = (props) => {
-  const { taskName, cursor } = props;
-  const [editor] = useLexicalComposerContext();
-  const [value, setValue] = useState("");
-
-  useEffect(() => {
-    editor.update(() => {
-      const root = $getRoot().getFirstChild();
-      const textnode = $createTextNode(value)
-      root.append(textnode);
-    });
-  }, [editor, value]);
-
-  const handleOptionChange = (option) => {
-    setValue(value.slice(0, cursor) + option + value.slice(cursor))
-  };
-
-  return (
-    <select onChange={(e) => handleOptionChange(e.target.value)}>
-      <option value="ONE">ONE</option>
-      <option value="TWO">TWO</option>
-      <option value="THREE">THREE</option>
-    </select>
-  );
-}
-
+import { MyCustomLineBreakNodePlugin } from './plugins/MyCustomLineBreakNodePlugin';
+import { MyCustomAddCursorTaskOption } from './plugins/AddValueCurrentCursorPointerPlugin';
 
 export const Editor = () => {
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
-  const [cursor, setCursor] = useState('');
-  console.log(taskName)
 
   const onChangeTaskDescripation = (editorState) => {
     editorState.read(() => {
@@ -94,6 +28,8 @@ export const Editor = () => {
   const editorConfig = {
     namespace: 'MyEditor',
     theme: ExampleTheme,
+    editor__DEPRECATED: null,
+    nodes: [LinkNode],
     onError(error) {
       console.log(error);
     },
@@ -102,8 +38,6 @@ export const Editor = () => {
   const onChangeTaskName = (editorState) => {
     editorState.read(() => {
       const root = $getRoot();
-      const selection = $getSelection();
-      setCursor(selection.anchor.offset);
       setTaskName(root.__cachedText)
     });
   };
@@ -112,8 +46,8 @@ export const Editor = () => {
     <>
       <div className='editor-container'>
         <LexicalComposer initialConfig={editorConfig}>
+          <MyCustomAddCursorTaskOption />
           <span>Task Name*</span>
-          <MyCustomAddCursorTaskOption cursor={cursor} taskName={taskName} />
           <div className="editor-inner">
             <RichTextPlugin
               contentEditable={<ContentEditable className="editor-input1" />}

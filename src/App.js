@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./css/styles.css";
 import { Editor } from "./Editor";
 
 export default function App() {

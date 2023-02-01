@@ -9,7 +9,7 @@ import {
     INSERT_PARAGRAPH_COMMAND,
 } from "lexical";
 
-export const MyCustomLineBreakNodePlugin = () => {
+export const CustomPreventLineBreakNodePlugin = () => {
     const [editor] = useLexicalComposerContext();
     useEffect(() => {
         editor.registerCommand(

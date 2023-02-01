@@ -11,8 +11,8 @@ import { $getRoot } from "lexical";
 
 // components
 import ExampleTheme from "./themes/ExampleTheme";
-import { MyCustomLineBreakNodePlugin } from './plugins/MyCustomLineBreakNodePlugin';
-import { MyCustomAddCursorTaskOption } from './plugins/AddValueCurrentCursorPointerPlugin';
+import { CustomPreventLineBreakNodePlugin } from './plugins/CustomPreventLineBreakNodePlugin';
+import { AddValueInTextFieldAddCursorTaskOption } from './plugins/AddValueInTextFieldCurrentCursorPointerPlugin';
 
 export const Editor = () => {
   const [taskName, setTaskName] = useState('');
@@ -46,7 +46,7 @@ export const Editor = () => {
     <>
       <div className='editor-container'>
         <LexicalComposer initialConfig={editorConfig}>
-          <MyCustomAddCursorTaskOption />
+          <AddValueInTextFieldAddCursorTaskOption />
           <span>Task Name*</span>
           <div className="editor-inner">
             <RichTextPlugin
@@ -55,7 +55,7 @@ export const Editor = () => {
               ErrorBoundary={ErrorBoundary}
             />
             <OnChangePlugin onChange={onChangeTaskName} />
-            <MyCustomLineBreakNodePlugin />
+            <CustomPreventLineBreakNodePlugin />
           </div>
         </LexicalComposer>
         <br />

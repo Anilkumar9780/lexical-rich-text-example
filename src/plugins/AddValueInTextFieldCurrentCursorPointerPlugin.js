@@ -9,7 +9,7 @@ import {
     $isRootNode,
 } from "lexical";
 
-export const MyCustomAddCursorTaskOption = () => {
+export const AddValueInTextFieldAddCursorTaskOption = () => {
     const [editor] = useLexicalComposerContext();
     const [value, setValue] = useState("");
 

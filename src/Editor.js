@@ -21,7 +21,7 @@ export const Editor = () => {
   const onChangeTaskDescripation = (editorState) => {
     editorState.read(() => {
       const root = $getRoot();
-      setTaskDescription(root.__cachedText)
+      setTaskDescription(root?.__cachedText)
     });
   }
 
@@ -38,7 +38,7 @@ export const Editor = () => {
   const onChangeTaskName = (editorState) => {
     editorState.read(() => {
       const root = $getRoot();
-      setTaskName(root.__cachedText)
+      setTaskName(root?.__cachedText)
     });
   };
 
@@ -46,7 +46,7 @@ export const Editor = () => {
     <>
       <div className='editor-container'>
         <LexicalComposer initialConfig={editorConfig}>
-          <AddValueInTextFieldAddCursorTaskOption />
+          <AddValueInTextFieldAddCursorTaskOption taskName={taskName} />
           <span>Task Name*</span>
           <div className="editor-inner">
             <RichTextPlugin

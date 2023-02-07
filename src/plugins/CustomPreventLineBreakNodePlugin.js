@@ -6,16 +6,23 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 // lexical library Command
 import {
     COMMAND_PRIORITY_EDITOR,
-    INSERT_PARAGRAPH_COMMAND,
+    KEY_ENTER_COMMAND
 } from "lexical";
 
 export const CustomPreventLineBreakNodePlugin = () => {
     const [editor] = useLexicalComposerContext();
+
     useEffect(() => {
         editor.registerCommand(
-            INSERT_PARAGRAPH_COMMAND,
-            () => {
-                return true;
+            KEY_ENTER_COMMAND,
+            (event) => {
+                if (
+                    (event?.shiftKey && event?.keyCode === 13) ||
+                    event?.keyCode === 13
+                ) {
+                    event.preventDefault();
+                    return true;
+                }
             },
             COMMAND_PRIORITY_EDITOR
         );
